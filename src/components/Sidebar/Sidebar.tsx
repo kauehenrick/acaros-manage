@@ -1,10 +1,11 @@
 import {
 	PiBook,
 	PiCirclesThreePlusLight,
+	PiFlyingSaucerLight,
 	PiGearLight,
 	PiHouseLight,
+	PiPenNibLight,
 	PiUserCircleFill,
-	PiUserLight,
 } from "react-icons/pi";
 import {
 	Accordion,
@@ -22,11 +23,23 @@ export default function Sidebar() {
 	const registerOptions = [
 		{
 			title: "Livros",
-			url: "/",
+			url: "/books",
 			icon: PiBook,
 			value: "products",
 		},
-		{ title: "Pessoas", url: "/", icon: PiUserLight, value: "people" },
+		{
+			title: "Autores",
+			url: "/authors",
+			icon: PiPenNibLight,
+			value: "authors",
+		},
+		{
+			title: "Gêneros",
+			url: "/genres",
+			icon: PiFlyingSaucerLight,
+			value: "genres",
+		},
+		/*{ title: "Pessoas", url: "/people", icon: PiUserLight, value: "people" },*/
 	];
 
 	const isRegisterSelected = registerOptions.some(
@@ -78,7 +91,7 @@ export default function Sidebar() {
 
 					<MenuOption
 						title="Configurações"
-						url=""
+						url="/settings"
 						icon={PiGearLight}
 						value="settings"
 					/>
