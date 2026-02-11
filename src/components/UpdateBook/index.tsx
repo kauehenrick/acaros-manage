@@ -37,6 +37,8 @@ export default function UpdateBook(book: BookProps) {
 	const form = useForm<z.infer<typeof bookFormSchema>>({
 		resolver: zodResolver(bookFormSchema),
 		defaultValues: {
+			id: book.id,
+			isActive: book.isActive,
 			title: book.title,
 			author: book.author,
 			genre: book.genre,

@@ -1,5 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { AuthorProps } from "@/stores/AuthorStore";
+import DisableAuthor from "../DisableAuthor";
+import UpdateAuthor from "../UpdateAuthor";
 
 export const columns: ColumnDef<AuthorProps>[] = [
 	{
@@ -29,6 +31,11 @@ export const columns: ColumnDef<AuthorProps>[] = [
 	{
 		accessorKey: "actions",
 		header: "Ações",
-		cell: (cell) => <div className="flex space-x-4"></div>,
+		cell: (cell) => (
+			<div className="flex space-x-4">
+				<UpdateAuthor {...cell.row.original} />
+				<DisableAuthor author={cell.row.original} />
+			</div>
+		),
 	},
 ];

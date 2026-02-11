@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const data = [
 	{
@@ -44,67 +45,72 @@ type BookStoreProps = {
 	updateBook: (book: Partial<BookProps> & { id: string }) => void;
 };
 
-export const useBookStore = create<BookStoreProps>((set) => ({
-	books: [],
-	error: null,
+export const useBookStore = create<BookStoreProps>()(
+	persist(
+		(set) => ({
+			books: [],
+			error: null,
 
-	getBooks: async () => {
-		try {
-			set({ books: data, error: null });
-		} catch (err) {
-			console.error(err);
-			toast.error("Erro inesperado ao buscar livros!");
-			set({ error: err });
-		}
-	},
+			getBooks: async () => {
+				try {
+					set({ books: data, error: null });
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro inesperado ao buscar livros!");
+					set({ error: err });
+				}
+			},
 
-	addBook: (book) => {
-		try {
-			set((state) => ({
-				books: [
-					...state.books,
-					{
-						...book,
-						id: uuidv4(),
-						isActive: true,
-					},
-				],
-			}));
+			addBook: (book) => {
+				try {
+					set((state) => ({
+						books: [
+							...state.books,
+							{
+								...book,
+								id: uuidv4(),
+								isActive: true,
+							},
+						],
+					}));
 
-			toast.success("Livro cadastrado com sucesso!");
-		} catch (err) {
-			console.error(err);
-			toast.error("Erro ao cadastrar o livro.");
-		}
-	},
+					toast.success("Livro cadastrado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro ao cadastrar o livro.");
+				}
+			},
 
-	disableBook: (book) => {
-		try {
-			set((state) => ({
-				books: state.books.map((b) =>
-					b.id === book.id ? { ...b, isActive: false } : b,
-				),
-			}));
+			disableBook: (book) => {
+				try {
+					set((state) => ({
+						books: state.books.map((b) =>
+							b.id === book.id ? { ...b, isActive: false } : b,
+						),
+					}));
 
-			toast.success("Livro desativado com sucesso!");
-		} catch (err) {
-			console.error(err);
-			toast.error("Erro ao desativar o livro.");
-		}
-	},
+					toast.success("Livro desativado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro ao desativar o livro.");
+				}
+			},
 
-	updateBook: (book) => {
-		try {
-			set((state) => ({
-				books: state.books.map((b) =>
-					b.id === book.id ? { ...b, ...book } : b,
-				),
-			}));
+			updateBook: (book) => {
+				try {
+					set((state) => ({
+						books: state.books.map((b) =>
+							b.id === book.id ? { ...b, ...book } : b,
+						),
+					}));
 
-			toast.success("Livro atualizado com sucesso!");
-		} catch (err) {
-			console.error(err);
-			toast.error("Erro ao atualizar o livro.");
-		}
-	},
-}));
+					toast.success("Livro atualizado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro ao atualizar o livro.");
+				}
+			},
+		}),
+		{ name: "book-storage" },
+	),
+);

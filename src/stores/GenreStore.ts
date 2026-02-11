@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const genresData: GenreProps[] = [
 	{
@@ -22,7 +23,7 @@ export const genresData: GenreProps[] = [
 ];
 
 export const genreFormSchema = z.object({
-	id: z.string(),
+	id: z.string().optional(),
 	isActive: z.boolean().optional(),
 	name: z.string().min(2, { message: "O nome do gênero deve ser informado." }),
 });
@@ -38,40 +39,71 @@ type GenreStoreProps = {
 	updateGenre: (genre: GenreProps) => void;
 };
 
-export const useGenreStore = create<GenreStoreProps>((set) => ({
-	genres: [],
-	error: null,
+export const useGenreStore = create<GenreStoreProps>()(
+	persist(
+		(set) => ({
+			genres: [],
+			error: null,
 
-	getGenres: async () => {
-		try {
-			set({ genres: genresData, error: null });
-		} catch (err) {
-			toast("Erro inesperado ao buscar gêneros!");
-			set({ error: err });
-		}
-	},
+			getGenres: async () => {
+				try {
+					set({ genres: genresData, error: null });
+				} catch (err) {
+					toast("Erro inesperado ao buscar gêneros!");
+					set({ error: err });
+				}
+			},
 
-	addGenre: (genre) =>
-		set((state) => ({
-			genres: [
-				...state.genres,
-				{
-					...genre,
-					id: uuidv4(),
-					isActive: true,
-				},
-			],
-		})),
+			addGenre: (genre) => {
+				try {
+					set((state) => ({
+						genres: [
+							...state.genres,
+							{
+								id: uuidv4(),
+								isActive: true,
+								...genre,
+							},
+						],
+					}));
+					toast.success("Gênero adicionado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro inesperado ao adicionar gênero!");
+					set({ error: err });
+				}
+			},
 
-	disableGenre: (genre) =>
-		set((state) => ({
-			genres: state.genres.map((g) =>
-				g.id === genre.id ? { ...g, isActive: false } : g,
-			),
-		})),
+			disableGenre: (genre) => {
+				try {
+					set((state) => ({
+						genres: state.genres.map((g) =>
+							g.id === genre.id ? { ...g, isActive: false } : g,
+						),
+					}));
+					toast.success("Gênero desativado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro inesperado ao desativar gênero!");
+					set({ error: err });
+				}
+			},
 
-	updateGenre: (genre) =>
-		set((state) => ({
-			genres: state.genres.map((g) => (g.id === genre.id ? genre : g)),
-		})),
-}));
+			updateGenre: (genre) => {
+				try {
+					set((state) => ({
+						genres: state.genres.map((g) => (g.id === genre.id ? genre : g)),
+					}));
+					toast.success("Gênero atualizado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro inesperado ao atualizar gênero!");
+					set({ error: err });
+				}
+			},
+		}),
+		{
+			name: "genre-storage",
+		},
+	),
+);

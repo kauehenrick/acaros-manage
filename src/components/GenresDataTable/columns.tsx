@@ -1,5 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { GenreProps } from "@/stores/GenreStore";
+import DisableGenre from "../DisableGenre";
+import UpdateGenre from "../UpdateGenre";
 
 export const columns: ColumnDef<GenreProps>[] = [
 	{
@@ -29,6 +31,11 @@ export const columns: ColumnDef<GenreProps>[] = [
 	{
 		accessorKey: "actions",
 		header: "Ações",
-		cell: (cell) => <div className="flex space-x-4"></div>,
+		cell: (cell) => (
+			<div className="flex space-x-4">
+				<UpdateGenre {...cell.row.original} />
+				<DisableGenre genre={cell.row.original} />
+			</div>
+		),
 	},
 ];

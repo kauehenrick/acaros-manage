@@ -7,6 +7,19 @@ import UpdateBook from "../UpdateBook";
 
 export const columns: ColumnDef<BookProps>[] = [
 	{
+		id: "index",
+		sortingFn: (rowA, rowB) => rowA.index - rowB.index,
+		header: ({ column }) => (
+			<p
+				className="cursor-pointer"
+				onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+			>
+				#
+			</p>
+		),
+		cell: ({ row }) => <span>{row.index + 1}</span>,
+	},
+	{
 		accessorKey: "title",
 		header: ({ column }) => (
 			<p

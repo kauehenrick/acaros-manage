@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 import { z } from "zod";
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export const authorsData: AuthorProps[] = [
 	{
@@ -32,7 +33,7 @@ export const authorsData: AuthorProps[] = [
 ];
 
 export const authorFormSchema = z.object({
-	id: z.string(),
+	id: z.string().optional(),
 	isActive: z.boolean().optional(),
 	name: z.string().min(2, { message: "O nome do autor deve ser informado." }),
 });
@@ -48,41 +49,71 @@ type AuthorStoreProps = {
 	updateAuthor: (author: AuthorProps) => void;
 };
 
-export const useAuthorStore = create<AuthorStoreProps>((set) => ({
-	authors: [],
-	error: null,
+export const useAuthorStore = create<AuthorStoreProps>()(
+	persist(
+		(set) => ({
+			authors: [],
+			error: null,
 
-	getAuthors: async () => {
-		try {
-			set({ authors: authorsData, error: null });
-		} catch (err) {
-			toast("Erro inesperado ao buscar autores!");
-			set({ error: err });
-		}
-	},
+			getAuthors: async () => {
+				try {
+					set({ authors: authorsData, error: null });
+				} catch (err) {
+					toast("Erro inesperado ao buscar autores!");
+					set({ error: err });
+				}
+			},
 
-	addAuthor: (author) =>
-		set((state) => ({
-			authors: [
-				...state.authors,
-				{
-					...author,
-					id: uuidv4(),
-					isActive: true,
-				},
-			],
-		})),
-		
+			addAuthor: (author) => {
+				try {
+					set((state) => ({
+						authors: [
+							...state.authors,
+							{
+								id: uuidv4(),
+								isActive: true,
+								...author,
+							},
+						],
+					}));
+					toast.success("Autor adicionado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro inesperado ao adicionar autor!");
+					set({ error: err });
+				}
+			},
 
-	disableAuthor: (author) =>
-		set((state) => ({
-			authors: state.authors.map((a) =>
-				a.id === author.id ? { ...a, isActive: false } : a,
-			),
-		})),
+			disableAuthor: (author) => {
+				try {
+					set((state) => ({
+						authors: state.authors.map((a) =>
+							a.id === author.id ? { ...a, isActive: false } : a,
+						),
+					}));
+					toast.success("Autor desativado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro inesperado ao desativar autor!");
+					set({ error: err });
+				}
+			},
 
-	updateAuthor: (author) =>
-		set((state) => ({
-			authors: state.authors.map((a) => (a.id === author.id ? author : a)),
-		})),
-}));
+			updateAuthor: (author) => {
+				try {
+					set((state) => ({
+						authors: state.authors.map((a) =>
+							a.id === author.id ? author : a,
+						),
+					}));
+					toast.success("Autor atualizado com sucesso!");
+				} catch (err) {
+					console.error(err);
+					toast.error("Erro inesperado ao atualizar autor!");
+					set({ error: err });
+				}
+			},
+		}),
+		{ name: "author-storage" },
+	),
+);

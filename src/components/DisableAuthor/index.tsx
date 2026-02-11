@@ -10,13 +10,13 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import type { BookProps } from "@/stores/BookStore";
-import { useBookStore } from "@/stores/BookStore";
+import type { AuthorProps } from "@/stores/AuthorStore";
+import { useAuthorStore } from "@/stores/AuthorStore";
 import { Button } from "../ui/button";
 
-export default function DisableBook({ book }: { book: BookProps }) {
+export default function DisableAuthor({ author }: { author: AuthorProps }) {
 	const [open, setOpen] = useState(false);
-	const { disableBook } = useBookStore();
+	const { disableAuthor } = useAuthorStore();
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -28,21 +28,24 @@ export default function DisableBook({ book }: { book: BookProps }) {
 					<PiTrashLight size="20px" />
 				</span>
 			</DialogTrigger>
+
 			<DialogContent className="w-4/12">
 				<DialogHeader>
 					<DialogTitle>Você tem certeza?</DialogTitle>
 					<DialogDescription>
-						Esse processo irá desativar esse(a) livro! Confirme clicando nos
+						Esse processo irá desativar esse(a) autor(a)! Confirme clicando nos
 						botões abaixo.
 					</DialogDescription>
 				</DialogHeader>
+
 				<DialogFooter>
 					<DialogClose asChild data-testid="close-button">
 						<Button variant="ghost">Não</Button>
 					</DialogClose>
+
 					<Button
 						onClick={() => {
-							disableBook(book);
+							disableAuthor(author);
 							setOpen(false);
 						}}
 					>

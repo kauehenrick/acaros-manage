@@ -1,5 +1,5 @@
 import AddAuthor from "@/components/AddAuthor";
-import AuthorsDataTable from "@/components/AuthorDataTable";
+import AuthorsDataTable from "@/components/AuthorsDataTable";
 import Header from "@/components/Header/Header";
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { Button } from "@/components/ui/button";
