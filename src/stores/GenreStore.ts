@@ -139,9 +139,9 @@ export const useGenreStore = create<GenreStoreProps>((set, get) => ({
 				genres: state.genres.map((g) => (g.id === genre.id ? data.genre : g)),
 			}));
 
-			toast.success("Autor habilitado com sucesso.");
+			toast.success("Gênero habilitado com sucesso.");
 		} catch (err) {
-			toast.error("Erro ao habilitar o autor.");
+			toast.error("Erro ao habilitar o gênero.");
 			set({ error: err });
 			throw err;
 		}

@@ -1,10 +1,11 @@
 import {
-	PiBook,
+	PiBookOpenLight,
 	PiCirclesThreePlusLight,
-	PiFlyingSaucerLight,
+	PiGearLight,
+	PiHouseLight,
 	PiPenNibLight,
 	PiSignOut,
-	PiUserCircleFill,
+	PiTagLight,
 } from "react-icons/pi";
 import {
 	Accordion,
@@ -12,11 +13,7 @@ import {
 	AccordionItem,
 	AccordionTrigger,
 } from "@/components/ui/accordion";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/stores/AuthStore";
 import { useSidebarStore } from "@/stores/SidebarStore";
 import logoFuXiImg from "../../assets/fuxi-logo.svg";
@@ -29,8 +26,8 @@ export default function Sidebar() {
 	const registerOptions = [
 		{
 			title: "Livros",
-			url: "/",
-			icon: PiBook,
+			url: "/books",
+			icon: PiBookOpenLight,
 			value: "products",
 		},
 		{
@@ -42,7 +39,7 @@ export default function Sidebar() {
 		{
 			title: "Gêneros",
 			url: "/genres",
-			icon: PiFlyingSaucerLight,
+			icon: PiTagLight,
 			value: "genres",
 		},
 	];
@@ -61,12 +58,12 @@ export default function Sidebar() {
 				/>
 
 				<section>
-					{/* <MenuOption
+					<MenuOption
 						title="Tela inicial"
 						url="/"
 						icon={PiHouseLight}
 						value="home"
-					/> */}
+					/>
 
 					<Accordion
 						type="single"
@@ -94,35 +91,35 @@ export default function Sidebar() {
 						</AccordionItem>
 					</Accordion>
 
-					{/* <MenuOption
+					<MenuOption
 						title="Configurações"
 						url="/settings"
 						icon={PiGearLight}
 						value="settings"
-					/> */}
+					/>
 				</section>
 			</div>
 
-			<footer className="ms-4 mb-4 flex items-center gap-3 text-xs">
-				<Popover>
-					<PopoverTrigger asChild>
-						<PiUserCircleFill className="cursor-pointer" size={"2.5rem"} />
-					</PopoverTrigger>
-					<PopoverContent className="ms-2 w-30 p-0">
-						<button
-							type="button"
-							className="flex w-full cursor-pointer items-center space-x-2 p-2 transition duration-300 hover:bg-white-300"
-							onClick={logout}
-						>
-							<PiSignOut />
-							<p className="text-sm">Sair</p>
-						</button>
-					</PopoverContent>
-				</Popover>
+			<footer className="ms-4 mb-4 flex items-center gap-3 border-t pt-4 text-xs">
+				<Avatar className="border">
+					<AvatarImage src="" />
+					<AvatarFallback className="bg-green-primary text-white-300">
+						{user?.name.substring(0, 1).toUpperCase()}
+					</AvatarFallback>
+				</Avatar>
+
 				<div>
 					<p>{user?.name ?? "Usuário"}</p>
 					<p className="font-light">versão: {__APP_VERSION__}</p>
 				</div>
+
+				<button
+					type="button"
+					className="mr-5 ml-auto flex cursor-pointer items-center text-lg"
+					onClick={logout}
+				>
+					<PiSignOut />
+				</button>
 			</footer>
 		</aside>
 	);
